@@ -4,6 +4,8 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginModal from './components/auth/LoginModal';
 import CharacterList from './components/character/CharacterList';
 import SaveCharacterButton from './components/character/SaveCharacterButton';
+import CharacterList from './components/character/CharacterList';
+import SaveCharacterButton from './components/character/SaveCharacterButton';
 import ProfileSection from './components/ProfileSection';
 import StatSection from './components/StatSection';
 import TriggerSection from './components/TriggerSection';
@@ -102,6 +104,18 @@ function AppContent() {
     // Refresh character list or perform other actions after save
   };
 
+  const handleSelectCharacter = (character: CharacterData | null) => {
+    if (character) {
+      setCharacterData(character);
+    } else {
+      setCharacterData(initialData);
+    }
+  };
+
+  const handleSaveComplete = () => {
+    // Refresh character list or perform other actions after save
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center">
@@ -139,6 +153,13 @@ function AppContent() {
             </div>
             
             <div className="flex items-center space-x-4">
+              {user && (
+                <SaveCharacterButton 
+                  characterData={characterData}
+                  onSave={handleSaveComplete}
+                />
+              )}
+              
               {user && (
                 <SaveCharacterButton 
                   characterData={characterData}
@@ -195,6 +216,16 @@ function AppContent() {
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Character List - Only show when logged in */}
+          {user && (
+            <div className="xl:col-span-1">
+              <CharacterList
+                onSelectCharacter={handleSelectCharacter}
+                currentCharacter={characterData}
+              />
+            </div>
+          )}
+
           {/* Character List - Only show when logged in */}
           {user && (
             <div className="xl:col-span-1">

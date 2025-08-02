@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { User, Zap, Target, Shield, Eye } from 'lucide-react';
+import { User, Zap, Target, Shield, Eye, LogIn, LogOut } from 'lucide-react';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import LoginModal from './components/auth/LoginModal';
+import CharacterList from './components/character/CharacterList';
+import SaveCharacterButton from './components/character/SaveCharacterButton';
 import ProfileSection from './components/ProfileSection';
 import StatSection from './components/StatSection';
 import TriggerSection from './components/TriggerSection';
@@ -33,9 +37,11 @@ const triggerLibrary: TriggerLibrary = {
   "オプション": ["カメレオン", "グラスホッパー", "スパイダー", "スタアメーカー", "バッグワーム", "鉛弾", "ダミービーコン"]
 };
 
-function App() {
+function AppContent() {
   const [characterData, setCharacterData] = useState<CharacterData>(initialData);
   const [isVIP, setIsVIP] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { user, signOut, loading } = useAuth();
 
   // Auto-generate trion for non-VIP users
   useEffect(() => {
@@ -72,6 +78,29 @@ function App() {
     }
   };
 
+  const handleSelectCharacter = (character: CharacterData | null) => {
+    if (character) {
+      setCharacterData(character);
+    } else {
+      setCharacterData(initialData);
+    }
+  };
+
+  const handleSaveComplete = () => {
+    // Refresh character list or perform other actions after save
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-green-500/30 border-t-green-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       {/* Background Pattern */}
@@ -97,25 +126,65 @@ function App() {
               </div>
             </div>
             
-            <button
-              onClick={toggleVIP}
-              className={`px-4 py-2 rounded-lg border transition-all duration-300 font-medium ${
-                isVIP
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-500 shadow-lg shadow-orange-500/25'
-                  : 'bg-gray-800/50 text-gray-300 border-gray-600 hover:border-orange-400 hover:text-orange-400'
-              }`}
-            >
-              {isVIP ? 'VIP Mode' : 'Standard Mode'}
-            </button>
+            <div className="flex items-center space-x-4">
+              {user && (
+                <SaveCharacterButton 
+                  characterData={characterData}
+                  onSave={handleSaveComplete}
+                />
+              )}
+              
+              <button
+                onClick={toggleVIP}
+                className={`px-4 py-2 rounded-lg border transition-all duration-300 font-medium ${
+                  isVIP
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-500 shadow-lg shadow-orange-500/25'
+                    : 'bg-gray-800/50 text-gray-300 border-gray-600 hover:border-orange-400 hover:text-orange-400'
+                }`}
+              >
+                {isVIP ? 'VIP Mode' : 'Standard Mode'}
+              </button>
+
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm text-gray-400">{user.email}</span>
+                  <button
+                    onClick={signOut}
+                    className="px-4 py-2 rounded-lg border border-red-500/30 bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-all duration-300 font-medium flex items-center space-x-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>ログアウト</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="px-4 py-2 rounded-lg border border-green-500/30 bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all duration-300 font-medium flex items-center space-x-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>ログイン</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Character List - Only show when logged in */}
+          {user && (
+            <div className="xl:col-span-1">
+              <CharacterList
+                onSelectCharacter={handleSelectCharacter}
+                currentCharacter={characterData}
+              />
+            </div>
+          )}
+
           {/* Left Column - Settings */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className={`${user ? 'xl:col-span-2' : 'xl:col-span-3'} space-y-8`}>
             <ProfileSection
               data={characterData}
               isVIP={isVIP}
@@ -136,7 +205,7 @@ function App() {
           </div>
 
           {/* Right Column - Preview */}
-          <div className="lg:col-span-1">
+          <div className="xl:col-span-1">
             <PreviewSection
               data={characterData}
               triggerLibrary={triggerLibrary}
@@ -144,7 +213,20 @@ function App() {
           </div>
         </div>
       </main>
+
+      <LoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

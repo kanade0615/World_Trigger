@@ -43,6 +43,10 @@ function AppContent() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { user, signOut, loading } = useAuth();
 
+  // VIP email list
+  const VIP_EMAILS = ['remiriazako@gmail.com'];
+  const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
+
   // Auto-generate trion for non-VIP users
   useEffect(() => {
     if (!isVIP && characterData.stats.trion === 0) {
@@ -70,7 +74,15 @@ function AppContent() {
     });
   };
 
+  // Reset VIP mode if user is not eligible
+  useEffect(() => {
+    if (isVIP && !isVIPEligible) {
+      setIsVIP(false);
+    }
+  }, [isVIP, isVIPEligible]);
+
   const toggleVIP = () => {
+    if (!isVIPEligible) return;
     setIsVIP(!isVIP);
     if (!isVIP) {
       // Reset trion when becoming VIP
@@ -134,16 +146,26 @@ function AppContent() {
                 />
               )}
               
-              <button
-                onClick={toggleVIP}
-                className={`px-4 py-2 rounded-lg border transition-all duration-300 font-medium ${
-                  isVIP
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-500 shadow-lg shadow-orange-500/25'
-                    : 'bg-gray-800/50 text-gray-300 border-gray-600 hover:border-orange-400 hover:text-orange-400'
-                }`}
-              >
-                {isVIP ? 'VIP Mode' : 'Standard Mode'}
-              </button>
+              {user ? (
+                <button
+                  onClick={toggleVIP}
+                  disabled={!isVIPEligible}
+                  className={`px-4 py-2 rounded-lg border transition-all duration-300 font-medium ${
+                    isVIP
+                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-500 shadow-lg shadow-orange-500/25'
+                      : isVIPEligible
+                      ? 'bg-gray-800/50 text-gray-300 border-gray-600 hover:border-orange-400 hover:text-orange-400'
+                      : 'bg-gray-800/30 text-gray-500 border-gray-700 cursor-not-allowed opacity-50'
+                  }`}
+                  title={!isVIPEligible ? 'VIP権限がありません' : ''}
+                >
+                  {isVIP ? 'VIP Mode' : isVIPEligible ? 'Standard Mode' : 'VIP権限なし'}
+                </button>
+              ) : (
+                <div className="px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/30 text-gray-500 font-medium">
+                  ログインが必要
+                </div>
+              )}
 
               {user ? (
                 <div className="flex items-center space-x-3">
@@ -188,12 +210,14 @@ function AppContent() {
             <ProfileSection
               data={characterData}
               isVIP={isVIP}
+              user={user}
               onUpdate={updateCharacterData}
             />
             
             <StatSection
               data={characterData}
               isVIP={isVIP}
+              user={user}
               onUpdate={updateCharacterData}
             />
             

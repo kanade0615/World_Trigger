@@ -4,7 +4,10 @@ import { SectionProps } from '../types';
 import Card from './ui/Card';
 import NumberInput from './ui/NumberInput';
 
-const StatSection: React.FC<SectionProps> = ({ data, isVIP, onUpdate }) => {
+const StatSection: React.FC<SectionProps & { user?: any }> = ({ data, isVIP, onUpdate, user }) => {
+  const VIP_EMAILS = ['remiriazako@gmail.com'];
+  const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
+
   const stats = data.stats;
   const totalStats = stats.speed + stats.range + stats.attack + stats.defenseSupport + stats.special;
   const maxTotal = isVIP ? 100 : 38;
@@ -34,7 +37,8 @@ const StatSection: React.FC<SectionProps> = ({ data, isVIP, onUpdate }) => {
         {!isVIP && (
           <p className="text-xs text-gray-400 flex items-center">
             <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下（VIPは制限なし）
+            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下
+            {isVIPEligible ? '（VIPは制限なし）' : '（VIP権限が必要）'}
           </p>
         )}
 
@@ -56,7 +60,8 @@ const StatSection: React.FC<SectionProps> = ({ data, isVIP, onUpdate }) => {
         {isOverLimit && !isVIP && (
           <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
             <p className="text-red-400 text-sm font-medium">
-              ⚠️ 合計値が制限を超えています。VIPモードに切り替えるか、値を調整してください。
+              ⚠️ 合計値が制限を超えています。
+              {isVIPEligible ? 'VIPモードに切り替えるか、' : ''}値を調整してください。
             </p>
           </div>
         )}

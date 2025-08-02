@@ -5,7 +5,10 @@ import Card from './ui/Card';
 import NumberInput from './ui/NumberInput';
 import TextInput from './ui/TextInput';
 
-const ProfileSection: React.FC<SectionProps> = ({ data, isVIP, onUpdate }) => {
+const ProfileSection: React.FC<SectionProps & { user?: any }> = ({ data, isVIP, onUpdate, user }) => {
+  const VIP_EMAILS = ['remiriazako@gmail.com'];
+  const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
+
   return (
     <Card title="プロフィール設定" icon={User}>
       <div className="space-y-6">
@@ -29,7 +32,7 @@ const ProfileSection: React.FC<SectionProps> = ({ data, isVIP, onUpdate }) => {
           {!isVIP && (
             <p className="mt-2 text-xs text-gray-400 flex items-center">
               <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-              一般ユーザーは自動設定（2〜15）
+              {isVIPEligible ? '一般ユーザーは自動設定（2〜15）' : 'VIP権限が必要です（自動設定：2〜15）'}
             </p>
           )}
         </div>

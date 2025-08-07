@@ -47,3 +47,5 @@ function AppContent() {
     fixedTrion: number;
   } | null>(null);
   const { user, signOut, loading } = useAuth();
+
+}

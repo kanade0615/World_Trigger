@@ -45,7 +45,7 @@ const StatSection: React.FC<StatSectionProps> = ({ data, isVIP, onUpdate, user, 
         {!isVIP && (
           <p className="text-xs text-gray-400 flex items-center">
             <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下（28-50の範囲でアカウント固有値）
+            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下（アカウント固有値）
             {isVIPEligible ? '（VIPは制限なし）' : '（VIP権限が必要）'}
           </p>
         )}

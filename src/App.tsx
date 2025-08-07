@@ -47,6 +47,3 @@ function AppContent() {
     fixedTrion: number;
   } | null>(null);
   const { user, signOut, loading } = useAuth();
-
-  // VIP email list
-  const VIP_EMAILS

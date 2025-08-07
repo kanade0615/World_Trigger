@@ -15,11 +15,11 @@ const initialData: CharacterData = {
   name: "",
   stats: {
     trion: 0,
-    speed: 0,
-    range: 0,
-    attack: 0,
-    defenseSupport: 0,
-    special: 0
+    speed: 1,
+    range: 1,
+    attack: 1,
+    defenseSupport: 1,
+    special: 1
   },
   triggers: {
     main: [],

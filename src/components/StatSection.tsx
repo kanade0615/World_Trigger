@@ -57,7 +57,7 @@ const StatSection: React.FC<StatSectionProps> = ({ data, isVIP, onUpdate, user, 
               label={label}
               value={stats[key as keyof typeof stats]}
               onChange={(value) => onUpdate(`stats.${key}`, value)}
-              min={0}
+              min={1}
               max={isVIP ? 20 : 15}
               icon={Icon}
               iconColor={color}

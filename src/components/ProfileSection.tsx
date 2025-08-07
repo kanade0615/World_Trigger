@@ -5,7 +5,15 @@ import Card from './ui/Card';
 import NumberInput from './ui/NumberInput';
 import TextInput from './ui/TextInput';
 
-const ProfileSection: React.FC<SectionProps & { user?: any }> = ({ data, isVIP, onUpdate, user }) => {
+interface ProfileSectionProps extends SectionProps {
+  user?: any;
+  userLimits?: {
+    maxStatTotal: number;
+    fixedTrion: number;
+  } | null;
+}
+
+const ProfileSection: React.FC<ProfileSectionProps> = ({ data, isVIP, onUpdate, user, userLimits }) => {
   const VIP_EMAILS = ['remiriazako@gmail.com'];
   const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
 
@@ -32,7 +40,10 @@ const ProfileSection: React.FC<SectionProps & { user?: any }> = ({ data, isVIP, 
           {!isVIP && (
             <p className="mt-2 text-xs text-gray-400 flex items-center">
               <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-              {isVIPEligible ? '一般ユーザーは自動設定（2〜15）' : 'VIP権限が必要です（自動設定：2〜15）'}
+              {isVIPEligible 
+                ? `一般ユーザーは固定値（${userLimits?.fixedTrion || '取得中...'}）` 
+                : `VIP権限が必要です（固定値：${userLimits?.fixedTrion || '取得中...'}）`
+              }
             </p>
           )}
         </div>

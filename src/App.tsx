@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Zap, Target, Shield, Eye, LogIn, LogOut } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { supabase } from './lib/supabase';
 import LoginModal from './components/auth/LoginModal';
 import CharacterList from './components/character/CharacterList';
 import SaveCharacterButton from './components/character/SaveCharacterButton';
@@ -41,22 +42,74 @@ function AppContent() {
   const [characterData, setCharacterData] = useState<CharacterData>(initialData);
   const [isVIP, setIsVIP] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [userLimits, setUserLimits] = useState<{
+    maxStatTotal: number;
+    fixedTrion: number;
+  } | null>(null);
   const { user, signOut, loading } = useAuth();
 
   // VIP email list
   const VIP_EMAILS = ['remiriazako@gmail.com'];
   const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
 
+  // Generate or fetch user limits
+  useEffect(() => {
+    if (user && !isVIP) {
+      generateOrFetchUserLimits();
+    } else if (!user) {
+      setUserLimits(null);
+    }
+  }, [user, isVIP]);
+
+  const generateOrFetchUserLimits = async () => {
+    if (!user) return;
+
+    try {
+      // Try to fetch existing limits from user metadata
+      const { data: profile, error } = await supabase.auth.getUser();
+      
+      if (error) throw error;
+
+      const metadata = profile.user?.user_metadata;
+      
+      if (metadata?.maxStatTotal && metadata?.fixedTrion) {
+        // Use existing limits
+        setUserLimits({
+          maxStatTotal: metadata.maxStatTotal,
+          fixedTrion: metadata.fixedTrion
+        });
+      } else {
+        // Generate new limits and save them
+        const maxStatTotal = Math.floor(Math.random() * 13) + 38; // 38-50
+        const fixedTrion = Math.floor(Math.random() * 14) + 2; // 2-15
+        
+        const newLimits = { maxStatTotal, fixedTrion };
+        setUserLimits(newLimits);
+
+        // Save to user metadata
+        await supabase.auth.updateUser({
+          data: newLimits
+        });
+      }
+    } catch (error) {
+      console.error('Error managing user limits:', error);
+      // Fallback to random generation
+      setUserLimits({
+        maxStatTotal: Math.floor(Math.random() * 13) + 38,
+        fixedTrion: Math.floor(Math.random() * 14) + 2
+      });
+    }
+  };
+
   // Auto-generate trion for non-VIP users
   useEffect(() => {
-    if (!isVIP && characterData.stats.trion === 0) {
-      const randomTrion = Math.floor(Math.random() * 14) + 2; // 2-15
+    if (!isVIP && userLimits && characterData.stats.trion === 0) {
       setCharacterData(prev => ({
         ...prev,
-        stats: { ...prev.stats, trion: randomTrion }
+        stats: { ...prev.stats, trion: userLimits.fixedTrion }
       }));
     }
-  }, [isVIP, characterData.stats.trion]);
+  }, [isVIP, userLimits, characterData.stats.trion]);
 
   const updateCharacterData = (path: string, value: any) => {
     setCharacterData(prev => {
@@ -211,6 +264,7 @@ function AppContent() {
               data={characterData}
               isVIP={isVIP}
               user={user}
+              userLimits={userLimits}
               onUpdate={updateCharacterData}
             />
             
@@ -218,6 +272,7 @@ function AppContent() {
               data={characterData}
               isVIP={isVIP}
               user={user}
+              userLimits={userLimits}
               onUpdate={updateCharacterData}
             />
             

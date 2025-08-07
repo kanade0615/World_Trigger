@@ -4,13 +4,21 @@ import { SectionProps } from '../types';
 import Card from './ui/Card';
 import NumberInput from './ui/NumberInput';
 
-const StatSection: React.FC<SectionProps & { user?: any }> = ({ data, isVIP, onUpdate, user }) => {
+interface StatSectionProps extends SectionProps {
+  user?: any;
+  userLimits?: {
+    maxStatTotal: number;
+    fixedTrion: number;
+  } | null;
+}
+
+const StatSection: React.FC<StatSectionProps> = ({ data, isVIP, onUpdate, user, userLimits }) => {
   const VIP_EMAILS = ['remiriazako@gmail.com'];
   const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
 
   const stats = data.stats;
   const totalStats = stats.speed + stats.range + stats.attack + stats.defenseSupport + stats.special;
-  const maxTotal = isVIP ? 100 : 38;
+  const maxTotal = isVIP ? 100 : (userLimits?.maxStatTotal || 38);
   const isOverLimit = totalStats > maxTotal;
 
   const statItems = [
@@ -37,7 +45,7 @@ const StatSection: React.FC<SectionProps & { user?: any }> = ({ data, isVIP, onU
         {!isVIP && (
           <p className="text-xs text-gray-400 flex items-center">
             <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下
+            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下（アカウント固有値）
             {isVIPEligible ? '（VIPは制限なし）' : '（VIP権限が必要）'}
           </p>
         )}

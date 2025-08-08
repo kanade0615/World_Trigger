@@ -28,16 +28,41 @@ const initialData: CharacterData = {
   }
 };
 
-const triggerLibrary: TriggerLibrary = {
-  "攻撃用": {
-    "攻撃手": ["弧月", "旋空", "幻踊", "スコーピオン", "レイガスト", "スラスター"],
-    "射手": ["アステロイド", "ハウンド", "メテオラ", "バイパー"],
-    "銃手": ["拳銃", "突撃銃", "散弾銃"],
-    "狙撃手": ["イーグレット", "アイビス", "ライトニング"]
-  },
-  "防御用": ["シールド", "エスクード"],
-  "オプション": ["カメレオン", "グラスホッパー", "スパイダー", "スタアメーカー", "バッグワーム", "鉛弾", "ダミービーコン"]
-};
+const triggerLibrary: TriggerLibrary = [
+  { "name": "弧月", "type": "攻撃手" },
+  { "name": "旋空", "type": "攻撃手", "option": "弧月専用オプション" },
+  { "name": "スコーピオン", "type": "攻撃手" },
+  { "name": "レイガスト", "type": "攻撃手" },
+  { "name": "スラスター", "type": "攻撃手", "option": "レイガスト専用オプション" },
+  { "name": "アステロイド", "type": "射手" },
+  { "name": "ハウンド", "type": "射手" },
+  { "name": "メテオラ", "type": "射手" },
+  { "name": "バイパー", "type": "射手" },
+  { "name": "突撃銃アステロイド", "type": "銃手", "weapon": "突撃銃", "bullet": "アステロイド" },
+  { "name": "突撃銃ハウンド", "type": "銃手", "weapon": "突撃銃", "bullet": "ハウンド" },
+  { "name": "突撃銃メテオラ", "type": "銃手", "weapon": "突撃銃", "bullet": "メテオラ" },
+  { "name": "突撃銃バイパー", "type": "銃手", "weapon": "突撃銃", "bullet": "バイパー" },
+  { "name": "拳銃アステロイド", "type": "銃手", "weapon": "拳銃", "bullet": "アステロイド" },
+  { "name": "拳銃ハウンド", "type": "銃手", "weapon": "拳銃", "bullet": "ハウンド" },
+  { "name": "拳銃メテオラ", "type": "銃手", "weapon": "拳銃", "bullet": "メテオラ" },
+  { "name": "拳銃バイパー", "type": "銃手", "weapon": "拳銃", "bullet": "バイパー" },
+  { "name": "散弾銃アステロイド", "type": "銃手", "weapon": "散弾銃", "bullet": "アステロイド" },
+  { "name": "散弾銃ハウンド", "type": "銃手", "weapon": "散弾銃", "bullet": "ハウンド" },
+  { "name": "散弾銃メテオラ", "type": "銃手", "weapon": "散弾銃", "bullet": "メテオラ" },
+  { "name": "散弾銃バイパー", "type": "銃手", "weapon": "散弾銃", "bullet": "バイパー" },
+  { "name": "イーグレット", "type": "狙撃手" },
+  { "name": "アイビス", "type": "狙撃手" },
+  { "name": "ライトニング", "type": "狙撃手" },
+  { "name": "シールド", "type": "防御" },
+  { "name": "エスクード", "type": "防御" },
+  { "name": "カメレオン", "type": "オプション" },
+  { "name": "グラスホッパー", "type": "オプション" },
+  { "name": "スパイダー", "type": "オプション" },
+  { "name": "スタアメーカー", "type": "オプション" },
+  { "name": "バッグワーム", "type": "オプション" },
+  { "name": "鉛弾", "type": "オプション" },
+  { "name": "ダミービーコン", "type": "オプション" }
+];
 
 function AppContent() {
   const [characterData, setCharacterData] = useState<CharacterData>(initialData);

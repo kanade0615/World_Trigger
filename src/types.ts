@@ -14,11 +14,15 @@ export interface CharacterData {
   };
 }
 
-export interface TriggerLibrary {
-  [category: string]: {
-    [subcategory: string]: string[];
-  } | string[];
+export interface Trigger {
+  name: string;
+  type: string;
+  option?: string;
+  weapon?: string;
+  bullet?: string;
 }
+
+export type TriggerLibrary = Trigger[];
 
 export interface SectionProps {
   data: CharacterData;

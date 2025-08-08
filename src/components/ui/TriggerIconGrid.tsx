@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sword, Shield, Zap, Target, Crosshair } from 'lucide-react';
-import { TriggerLibrary } from '../../types';
+import { TriggerLibrary, Trigger } from '../../types';
 
 interface TriggerIconGridProps {
   triggers: {
@@ -11,36 +11,38 @@ interface TriggerIconGridProps {
 }
 
 const TriggerIconGrid: React.FC<TriggerIconGridProps> = ({ triggers, triggerLibrary }) => {
-  const getTriggerCategory = (triggerName: string) => {
+  const getTrigger = (triggerName: string): Trigger | undefined => {
     if (!triggerLibrary) return 'unknown';
-    
-    for (const [category, content] of Object.entries(triggerLibrary)) {
-      if (Array.isArray(content)) {
-        if (content.includes(triggerName)) return category;
-      } else {
-        for (const triggers of Object.values(content)) {
-          if (triggers.includes(triggerName)) return category;
-        }
-      }
-    }
-    return 'unknown';
+    return triggerLibrary.find(trigger => trigger.name === triggerName);
   };
 
   const getTriggerIcon = (triggerName: string) => {
-    const category = getTriggerCategory(triggerName);
-    switch (category) {
-      case '攻撃用': return Sword;
-      case '防御用': return Shield;
+    const trigger = getTrigger(triggerName);
+    if (!trigger) return Crosshair;
+    
+    switch (trigger.type) {
+      case '攻撃手':
+      case '射手':
+      case '銃手':
+      case '狙撃手':
+        return Sword;
+      case '防御': return Shield;
       case 'オプション': return Zap;
       default: return Crosshair;
     }
   };
 
   const getCategoryColor = (triggerName: string) => {
-    const category = getTriggerCategory(triggerName);
-    switch (category) {
-      case '攻撃用': return 'from-red-500/20 to-red-600/20 border-red-500/30 text-red-400';
-      case '防御用': return 'from-blue-500/20 to-blue-600/20 border-blue-500/30 text-blue-400';
+    const trigger = getTrigger(triggerName);
+    if (!trigger) return 'from-gray-500/20 to-gray-600/20 border-gray-500/30 text-gray-400';
+    
+    switch (trigger.type) {
+      case '攻撃手':
+      case '射手':
+      case '銃手':
+      case '狙撃手':
+        return 'from-red-500/20 to-red-600/20 border-red-500/30 text-red-400';
+      case '防御': return 'from-blue-500/20 to-blue-600/20 border-blue-500/30 text-blue-400';
       case 'オプション': return 'from-yellow-500/20 to-yellow-600/20 border-yellow-500/30 text-yellow-400';
       default: return 'from-gray-500/20 to-gray-600/20 border-gray-500/30 text-gray-400';
     }

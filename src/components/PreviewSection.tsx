@@ -19,7 +19,7 @@ const PreviewSection: React.FC<SectionProps> = ({ data, triggerLibrary }) => {
               <span>トリオン: {data.stats.trion}</span>
               <span>•</span>
               <span>
-                合計: {data.stats.speed + data.stats.range + data.stats.attack + data.stats.defenseSupport + data.stats.special}
+                合計: {data.stats.speed + data.stats.range + data.stats.attack + data.stats.defenseSupport + data.stats.special + data.stats.technique}
               </span>
             </div>
           </div>

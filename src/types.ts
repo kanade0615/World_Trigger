@@ -7,6 +7,7 @@ export interface CharacterData {
     attack: number;
     defenseSupport: number;
     special: number;
+    technique: number;
   };
   triggers: {
     main: string[];

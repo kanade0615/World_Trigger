@@ -17,7 +17,7 @@ const StatSection: React.FC<StatSectionProps> = ({ data, isVIP, onUpdate, user, 
   const isVIPEligible = user && VIP_EMAILS.includes(user.email || '');
 
   const stats = data.stats;
-  const totalStats = stats.speed + stats.range + stats.attack + stats.defenseSupport + stats.special;
+  const totalStats = stats.speed + stats.range + stats.attack + stats.defenseSupport + stats.special + stats.technique;
   const maxTotal = isVIP ? 100 : (userLimits?.maxStatTotal || 38);
   const isOverLimit = totalStats > maxTotal;
 
@@ -27,6 +27,7 @@ const StatSection: React.FC<StatSectionProps> = ({ data, isVIP, onUpdate, user, 
     { key: 'attack', label: '攻撃', icon: Sword, color: 'text-red-400' },
     { key: 'defenseSupport', label: '防御援護', icon: Shield, color: 'text-yellow-400' },
     { key: 'special', label: '特殊戦闘', icon: Zap, color: 'text-purple-400' },
+    { key: 'technique', label: '技術', icon: Target, color: 'text-cyan-400' },
   ];
 
   return (
@@ -45,7 +46,7 @@ const StatSection: React.FC<StatSectionProps> = ({ data, isVIP, onUpdate, user, 
         {!isVIP && (
           <p className="text-xs text-gray-400 flex items-center">
             <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-            速度・射程・攻撃・防御援護・特殊戦闘の合計が{maxTotal}以下（アカウント固有値）
+            速度・射程・攻撃・防御援護・特殊戦闘・技術の合計が{maxTotal}以下（アカウント固有値）
             {isVIPEligible ? '（VIPは制限なし）' : '（VIP権限が必要）'}
           </p>
         )}

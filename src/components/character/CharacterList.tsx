@@ -124,7 +124,7 @@ const CharacterList: React.FC<CharacterListProps> = ({ onSelectCharacter, curren
                   <div className="flex items-center space-x-4 text-sm text-gray-400 mt-1">
                     <span>トリオン: {character.stats.trion}</span>
                     <span>
-                      合計: {character.stats.speed + character.stats.range + character.stats.attack + character.stats.defenseSupport + character.stats.special}
+                      合計: {character.stats.speed + character.stats.range + character.stats.attack + character.stats.defenseSupport + character.stats.special + character.stats.technique}
                     </span>
                   </div>
                   <div className="text-xs text-gray-500 mt-1">

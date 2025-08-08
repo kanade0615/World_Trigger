@@ -8,6 +8,7 @@ interface StatRadarChartProps {
     attack: number;
     defenseSupport: number;
     special: number;
+    technique: number;
   };
 }
 
@@ -19,11 +20,12 @@ const StatRadarChart: React.FC<StatRadarChartProps> = ({ stats }) => {
 
   const statLabels = [
     { key: 'attack', label: '攻撃', angle: 0 },
-    { key: 'speed', label: '速度', angle: 60 },
-    { key: 'range', label: '射程', angle: 120 },
-    { key: 'defenseSupport', label: '防御援護', angle: 180 },
-    { key: 'special', label: '特殊戦闘', angle: 240 },
-    { key: 'trion', label: 'トリオン', angle: 300 }
+    { key: 'speed', label: '速度', angle: 51.4 },
+    { key: 'range', label: '射程', angle: 102.8 },
+    { key: 'attack', label: '攻撃', angle: 154.2 },
+    { key: 'defenseSupport', label: '防御援護', angle: 205.6 },
+    { key: 'special', label: '特殊戦闘', angle: 257 },
+    { key: 'technique', label: '技術', angle: 308.4 }
   ];
 
   const getMaxValue = () => {

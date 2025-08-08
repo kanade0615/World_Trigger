@@ -19,7 +19,8 @@ const initialData: CharacterData = {
     range: 1,
     attack: 1,
     defenseSupport: 1,
-    special: 1
+    special: 1,
+    technique: 1
   },
   triggers: {
     main: [],

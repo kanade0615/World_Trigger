@@ -23,7 +23,6 @@ export type Database = {
             range: number;
             attack: number;
             defenseSupport: number;
-            special: number;
             technique: number;
           };
           triggers: {
@@ -43,7 +42,6 @@ export type Database = {
             range: number;
             attack: number;
             defenseSupport: number;
-            special: number;
             technique: number;
           };
           triggers: {
@@ -63,7 +61,6 @@ export type Database = {
             range: number;
             attack: number;
             defenseSupport: number;
-            special: number;
             technique: number;
           };
           triggers?: {

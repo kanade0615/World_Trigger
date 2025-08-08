@@ -80,7 +80,7 @@ function AppContent() {
         });
       } else {
         // Generate new limits and save them
-        const maxStatTotal = Math.floor(Math.random() * 13) + 38; // 38-50
+        const maxStatTotal = Math.floor(Math.random() * 12) + 34; // 34-45
         const fixedTrion = Math.floor(Math.random() * 14) + 2; // 2-15
         
         const newLimits = { maxStatTotal, fixedTrion };
@@ -95,7 +95,7 @@ function AppContent() {
       console.error('Error managing user limits:', error);
       // Fallback to random generation
       setUserLimits({
-        maxStatTotal: Math.floor(Math.random() * 13) + 38,
+        maxStatTotal: Math.floor(Math.random() * 12) + 34,
         fixedTrion: Math.floor(Math.random() * 14) + 2
       });
     }

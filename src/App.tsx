@@ -156,6 +156,11 @@ function AppContent() {
     // Refresh character list or perform other actions after save
   };
 
+  // Calculate if stats are over limit
+  const totalStats = characterData.stats.speed + characterData.stats.range + characterData.stats.attack + characterData.stats.defenseSupport + characterData.stats.special + characterData.stats.technique;
+  const maxTotal = isVIP ? 100 : (userLimits?.maxStatTotal || 38);
+  const isOverLimit = !isVIP && totalStats > maxTotal;
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center">
@@ -196,6 +201,7 @@ function AppContent() {
               {user && (
                 <SaveCharacterButton 
                   characterData={characterData}
+                  isOverLimit={isOverLimit}
                   onSave={handleSaveComplete}
                 />
               )}

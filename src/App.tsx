@@ -81,8 +81,8 @@ function AppContent() {
         });
       } else {
         // Generate new limits and save them
-        const maxStatTotal = Math.floor(Math.random() * 12) + 34; // 34-45
-        const fixedTrion = Math.floor(Math.random() * 14) + 2; // 2-15
+        const maxStatTotal = 36; // Fixed at 36 for all users
+        const fixedTrion = Math.floor(Math.random() * 4) + 5; // 5-8
         
         const newLimits = { maxStatTotal, fixedTrion };
         setUserLimits(newLimits);
@@ -96,8 +96,8 @@ function AppContent() {
       console.error('Error managing user limits:', error);
       // Fallback to random generation
       setUserLimits({
-        maxStatTotal: Math.floor(Math.random() * 12) + 34,
-        fixedTrion: Math.floor(Math.random() * 14) + 2
+        maxStatTotal: 36,
+        fixedTrion: Math.floor(Math.random() * 4) + 5
       });
     }
   };
@@ -157,7 +157,7 @@ function AppContent() {
   };
 
   // Calculate if stats are over limit
-  const totalStats = characterData.stats.speed + characterData.stats.range + characterData.stats.attack + characterData.stats.defenseSupport + characterData.stats.special + characterData.stats.technique;
+  const totalStats = characterData.stats.speed + characterData.stats.range + characterData.stats.attack + characterData.stats.defenseSupport + characterData.stats.technique;
   const maxTotal = isVIP ? 100 : (userLimits?.maxStatTotal || 38);
   const isOverLimit = !isVIP && totalStats > maxTotal;
 

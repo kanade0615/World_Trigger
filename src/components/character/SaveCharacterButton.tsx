@@ -15,8 +15,13 @@ const SaveCharacterButton: React.FC<SaveCharacterButtonProps> = ({ characterData
   const [saved, setSaved] = useState(false);
   const { user } = useAuth();
 
+  // Check minimum requirements
+  const hasMinimumRequirements = characterData.stats.technique >= 8 && 
+                                  characterData.stats.defenseSupport >= 6 && 
+                                  characterData.stats.attack >= 7;
+
   const saveCharacter = async () => {
-    if (!user || !characterData.name.trim() || isOverLimit) return;
+    if (!user || !characterData.name.trim() || isOverLimit || !hasMinimumRequirements) return;
 
     setSaving(true);
     try {
@@ -43,7 +48,7 @@ const SaveCharacterButton: React.FC<SaveCharacterButtonProps> = ({ characterData
     }
   };
 
-  const isDisabled = !user || !characterData.name.trim() || saving || isOverLimit;
+  const isDisabled = !user || !characterData.name.trim() || saving || isOverLimit || !hasMinimumRequirements;
 
   return (
     <button
@@ -52,23 +57,23 @@ const SaveCharacterButton: React.FC<SaveCharacterButtonProps> = ({ characterData
       className={`px-4 py-2 rounded-lg border font-medium transition-all duration-300 flex items-center space-x-2 ${
         saved
           ? 'bg-green-500/20 border-green-500/50 text-green-400'
-          : isOverLimit
+          : (isOverLimit || !hasMinimumRequirements)
           ? 'bg-red-500/20 border-red-500/50 text-red-400 cursor-not-allowed'
           : isDisabled
           ? 'bg-gray-800/50 border-gray-600 text-gray-500 cursor-not-allowed'
           : 'bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30 hover:border-green-500/50'
       }`}
-      title={isOverLimit ? '身体能力の合計値が上限を超えています' : ''}
+      title={isOverLimit ? '身体能力の合計値が上限を超えています' : !hasMinimumRequirements ? '必須条件を満たしていません' : ''}
     >
       {saved ? (
         <>
           <Check className="w-4 h-4" />
           <span>保存完了</span>
         </>
-      ) : isOverLimit ? (
+      ) : (isOverLimit || !hasMinimumRequirements) ? (
         <>
           <Save className="w-4 h-4" />
-          <span>上限超過</span>
+          <span>{isOverLimit ? '上限超過' : '条件不足'}</span>
         </>
       ) : (
         <>

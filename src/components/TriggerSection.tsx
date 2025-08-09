@@ -2,7 +2,7 @@ import React from 'react';
 import { Crosshair } from 'lucide-react';
 import { SectionProps } from '../types';
 import Card from './ui/Card';
-import TriggerSelector from './ui/TriggerSelector';
+import TriggerSlotGrid from './ui/TriggerSlotGrid';
 
 const TriggerSection: React.FC<SectionProps> = ({ data, triggerLibrary, onUpdate }) => {
   if (!triggerLibrary) return null;
@@ -11,28 +11,14 @@ const TriggerSection: React.FC<SectionProps> = ({ data, triggerLibrary, onUpdate
     <Card title="トリガー編成" icon={Crosshair}>
       <div className="space-y-6">
         <p className="text-sm text-gray-400">
-          攻撃・防御・オプションから最大8つ（メイン4、サブ4）を選択
+          各枠をクリックしてトリガーを選択してください（メイン4、サブ4）
         </p>
 
-        <div className="space-y-8">
-          <TriggerSelector
-            label="メイントリガー（最大4）"
-            selectedTriggers={data.triggers.main}
-            triggerLibrary={triggerLibrary}
-            maxSelect={4}
-            onUpdate={(triggers) => onUpdate('triggers.main', triggers)}
-            variant="main"
-          />
-
-          <TriggerSelector
-            label="サブトリガー（最大4）"
-            selectedTriggers={data.triggers.sub}
-            triggerLibrary={triggerLibrary}
-            maxSelect={4}
-            onUpdate={(triggers) => onUpdate('triggers.sub', triggers)}
-            variant="sub"
-          />
-        </div>
+        <TriggerSlotGrid
+          data={data}
+          triggerLibrary={triggerLibrary}
+          onUpdate={onUpdate}
+        />
       </div>
     </Card>
   );
